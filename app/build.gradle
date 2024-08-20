@@ -44,6 +44,9 @@ dependencies {
     //Bmob后端云
     //implementation'cn.bmob.android:http-legacy:1.0'
     //implementation'cn.bmob.android:bmob-sdk:3.5.5'
+    //SmartRefreshLayout下拉刷新框架
+    implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-alpha-12'
+    //implementation 'com.scwang.smartrefresh:SmartRefreshHeader:1.1.0-alpha-12'
 
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.9.0'

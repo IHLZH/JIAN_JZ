@@ -7,4 +7,5 @@
     <color name="hint">#bcbcbc</color>
     <color name="app_color">#fc80a3</color>
     <color name="normal">#dbdbdb</color>
+    <color name="background">#cdcdcd</color>
 </resources>

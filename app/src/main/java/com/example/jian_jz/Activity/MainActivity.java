@@ -112,8 +112,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void initFragment() {
         ArrayList<Fragment> fragmentList = new ArrayList<>();
-        fragmentList.add(new ChartFragment());
         fragmentList.add(new LedgerFragment());
+        fragmentList.add(new ChartFragment());
         fragmentList.add(new NoteFragment());
         fragmentList.add(new MineFragment());
 
