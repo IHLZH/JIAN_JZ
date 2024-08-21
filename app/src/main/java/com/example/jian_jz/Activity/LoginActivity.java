@@ -19,6 +19,13 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         //控件绑定监听器
         setLinsteners();
+
+    }
+
+    private void jumpToMainActivity() {
+        Intent intent = new Intent();
+        intent.setClass(LoginActivity.this, MainActivity.class);
+        startActivity(intent);
     }
 
     private void setLinsteners() {
@@ -31,5 +38,14 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        binding.btnLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                jumpToMainActivity();
+            }
+        });
+
+
     }
 }

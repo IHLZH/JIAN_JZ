@@ -12,12 +12,22 @@
         android:layout_height="match_parent">
     </androidx.viewpager2.widget.ViewPager2>
 
+    <View
+        android:layout_alignTop="@+id/tb_main"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/bottom">
+    </View>
+
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tb_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        app:tabIndicatorHeight="0dp"
+        app:tabSelectedTextColor="@color/app_color"
+        app:tabTextColor="@color/normal">
     </com.google.android.material.tabs.TabLayout>
 
 </RelativeLayout>

@@ -32,6 +32,10 @@ public class MainActivity extends AppCompatActivity {
 
         initFragment();
         initTabLayout();
+        setLinsteners();
+    }
+
+    private void setLinsteners() {
     }
 
     private void initTabLayout() {
@@ -61,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         );
 
 
-        binding.tbMain.setTabTextColors(R.color.app_color,R.color.normal);
+        //binding.tbMain.setTabTextColors(R.color.app_color,R.color.normal);
         binding.tbMain.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
