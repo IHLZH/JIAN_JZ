@@ -6,21 +6,31 @@
     android:layout_height="match_parent"
     tools:context=".Activity.AddActivity">
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tb_in_out"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:background="@color/app_color">
+    </RelativeLayout>
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tb_add"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_centerInParent="true"
         android:layout_alignParentTop="true"
-        app:tabMinWidth="100dp"
+        app:tabTextColor="@color/white"
         android:background="@color/app_color"/>
 
-    <androidx.recyclerview.widget.RecyclerView
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/vp_add"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tb_in_out">
-    </androidx.recyclerview.widget.RecyclerView>
+        android:layout_below="@+id/tb_add"
+        android:layout_marginTop="20dp">
+    </androidx.viewpager2.widget.ViewPager2>
 
     <include layout="@layout/item_add_jsj"
+        android:id="@+id/layout_add_jsj"
         android:visibility="invisible"/>
 
 </RelativeLayout>

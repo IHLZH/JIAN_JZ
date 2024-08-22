@@ -23,6 +23,14 @@ public class Bill implements Serializable {
         this.income = income;
     }
 
+    public Bill(Double cost, String time, String sortName, Integer sortImg, boolean income) {
+        this.cost = cost;
+        this.time = time;
+        this.sortName = sortName;
+        this.sortImg = sortImg;
+        this.income = income;
+    }
+
     public Integer getId() {
         return id;
     }

@@ -6,20 +6,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.example.jian_jz.Base.BaseActivity;
 import com.example.jian_jz.R;
 import com.example.jian_jz.databinding.ActivityLoginBinding;
 
-public class LoginActivity extends AppCompatActivity {
-    private ActivityLoginBinding binding;
+public class LoginActivity extends BaseActivity<ActivityLoginBinding> {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        binding = ActivityLoginBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+    protected void onCreated(Bundle savedInstanceState) {
         //控件绑定监听器
         setLinsteners();
-
     }
 
     private void jumpToMainActivity() {

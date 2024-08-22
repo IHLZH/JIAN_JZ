@@ -1,5 +1,6 @@
 package com.example.jian_jz.Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.jian_jz.Activity.AddActivity;
 import com.example.jian_jz.Adapter.BillRecyclerAdapter;
 import com.example.jian_jz.Entity.Bill;
 import com.example.jian_jz.Entity.Header;
@@ -55,7 +57,19 @@ public class LedgerFragment extends Fragment {
         //设置收支和监听器
         setSumOfInAndOut(headerList);
         setTimeSelect();
+        JumpToAdd();
         return view;
+    }
+
+    private void JumpToAdd() {
+        img_bill_add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setClass(getContext(), AddActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void setTimeSelect() {

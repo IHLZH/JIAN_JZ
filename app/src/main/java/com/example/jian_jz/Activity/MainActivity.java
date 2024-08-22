@@ -4,11 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.view.View;
 
-import com.example.jian_jz.Adapter.FragmentAdapter;
+import com.example.jian_jz.Adapter.MainFragmentAdapter;
+import com.example.jian_jz.Base.BaseActivity;
 import com.example.jian_jz.Fragment.ChartFragment;
 import com.example.jian_jz.Fragment.LedgerFragment;
 import com.example.jian_jz.Fragment.MineFragment;
@@ -21,21 +20,17 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
-    private ActivityMainBinding binding;
+public class MainActivity extends BaseActivity<ActivityMainBinding> {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-
+    protected void onCreated(Bundle savedInstanceState) {
         initFragment();
         initTabLayout();
         setLinsteners();
     }
 
     private void setLinsteners() {
+
     }
 
     private void initTabLayout() {
@@ -121,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
         fragmentList.add(new NoteFragment());
         fragmentList.add(new MineFragment());
 
-        FragmentAdapter fragmentAdapter = new FragmentAdapter(
+        MainFragmentAdapter fragmentAdapter = new MainFragmentAdapter(
                 fragmentList, this
         );
 
