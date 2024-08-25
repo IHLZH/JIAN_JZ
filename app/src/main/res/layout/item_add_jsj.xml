@@ -23,7 +23,7 @@
             android:background="@drawable/shape_jsj_textback" />
         <TextView
             android:id="@+id/tb_note_money"
-            android:text="0.0"
+            android:text="0"
             android:textColor="#000000"
             android:maxLength="11"
             android:layout_toLeftOf="@+id/tb_note_clear"

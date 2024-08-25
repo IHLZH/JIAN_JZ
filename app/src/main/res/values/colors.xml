@@ -9,6 +9,7 @@
     <color name="normal">#dbdbdb</color>
     <color name="background">#cdcdcd</color>
     <color name="bottom">#DCDCDC</color>
+    <color name="defalut">#8A000000</color>
 
     <color name="colorPrimary">#14baca</color>
     <color name="colorPrimaryDark">#14baca</color>

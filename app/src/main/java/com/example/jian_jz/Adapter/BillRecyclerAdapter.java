@@ -15,8 +15,11 @@ import com.example.jian_jz.Entity.Bill;
 import com.example.jian_jz.Entity.Header;
 import com.example.jian_jz.R;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class BillRecyclerAdapter extends RecyclerView.Adapter<BillRecyclerAdapter.ViewHolder> {
@@ -34,6 +37,8 @@ public class BillRecyclerAdapter extends RecyclerView.Adapter<BillRecyclerAdapte
         this.context = context;
         this.billList = billList;
         this.headerList = headerList;
+        HeaderNum = 0;
+        ItemNum = 0;
     }
 
     @NonNull
@@ -53,16 +58,16 @@ public class BillRecyclerAdapter extends RecyclerView.Adapter<BillRecyclerAdapte
             Header header = headerList.get(position - ItemNum);
             HeaderViewHolder headerViewHolder = (HeaderViewHolder)holder;
             headerViewHolder.getTv_bill_header_date().setText(header.getTime());
-            headerViewHolder.getTv_bill_header_ie().setText("收入：" + String.valueOf(header.getIn()) + " 支出：" + String.valueOf(header.getOut()));
+            headerViewHolder.getTv_bill_header_ie().setText("收入：" + String.format(Locale.CHINA, "%.2f", header.getIn()) + " 支出：" + String.format(Locale.CHINA, "%.2f", header.getOut()));
         }else{
             Bill bill = billList.get(position - HeaderNum);
             ItemViewHolder itemViewHolder = (ItemViewHolder)holder;
             itemViewHolder.getImg_bill_item_icon().setImageResource(bill.getSortImg());
             itemViewHolder.getTv_bill_item_name().setText(bill.getSortName());
             if(bill.isIncome()){
-                itemViewHolder.getTv_bill_item_num().setText("+" + String.valueOf(bill.getCost()));
+                itemViewHolder.getTv_bill_item_num().setText("+" + String.format(Locale.CHINA, "%.2f", bill.getCost()));
             }else{
-                itemViewHolder.getTv_bill_item_num().setText("-" + String.valueOf(bill.getCost()));
+                itemViewHolder.getTv_bill_item_num().setText("-" + String.format(Locale.CHINA, "%.2f", bill.getCost()));
             }
         }
     }
@@ -83,11 +88,11 @@ public class BillRecyclerAdapter extends RecyclerView.Adapter<BillRecyclerAdapte
             return HEADER_TYPE;
         } else if(isFirst){
             Log.i("isFirstBill", "getItemViewType: " + position + String.valueOf(isFirst));
-            if(isFirst == true)isFirst = false;
+            isFirst = false;
             ifAccept.put(position, ITEM_TYPE);
             ItemNum++;
             return ITEM_TYPE;
-        } else if (billList.get(position).getTime().equals(billList.get(position - 1).getTime())) {
+        } else if (billList.get(position - HeaderNum).getTime().equals(billList.get(position - 1 - HeaderNum).getTime())) {
             ifAccept.put(position, ITEM_TYPE);
             ItemNum++;
             return ITEM_TYPE;

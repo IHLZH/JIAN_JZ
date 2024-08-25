@@ -1,7 +1,6 @@
 package com.example.jian_jz.Activity;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.os.Bundle;
@@ -9,7 +8,7 @@ import android.os.Bundle;
 import com.example.jian_jz.Adapter.MainFragmentAdapter;
 import com.example.jian_jz.Base.BaseActivity;
 import com.example.jian_jz.Fragment.ChartFragment;
-import com.example.jian_jz.Fragment.LedgerFragment;
+import com.example.jian_jz.Fragment.BillFragment;
 import com.example.jian_jz.Fragment.MineFragment;
 import com.example.jian_jz.Fragment.NoteFragment;
 import com.example.jian_jz.R;
@@ -111,7 +110,7 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
 
     private void initFragment() {
         ArrayList<Fragment> fragmentList = new ArrayList<>();
-        fragmentList.add(new LedgerFragment());
+        fragmentList.add(new BillFragment());
         fragmentList.add(new ChartFragment());
         fragmentList.add(new NoteFragment());
         fragmentList.add(new MineFragment());

@@ -3,8 +3,8 @@ package com.example.jian_jz.Entity;
 import java.io.Serializable;
 
 public class Header implements Serializable {
-    private Double in;
-    private Double out;
+    private double in;
+    private double out;
     private String time;
 
     public Header() {

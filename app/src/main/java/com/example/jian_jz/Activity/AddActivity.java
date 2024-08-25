@@ -1,11 +1,15 @@
 package com.example.jian_jz.Activity;
 
+import androidx.annotation.ContentView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import android.content.ContentValues;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.Layout;
+import android.util.Log;
 import android.view.View;
 
 import com.example.jian_jz.Adapter.AddFragmentAdapter;
@@ -17,6 +21,7 @@ import com.example.jian_jz.Event.MessageEvent;
 import com.example.jian_jz.Fragment.AddInFragment;
 import com.example.jian_jz.Fragment.AddOutFragment;
 import com.example.jian_jz.R;
+import com.example.jian_jz.Utils.DB.DBUtil;
 import com.example.jian_jz.databinding.ActivityAddBinding;
 import com.example.jian_jz.databinding.ItemAddJsjBinding;
 import com.google.android.material.tabs.TabLayout;
@@ -29,17 +34,21 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 public class AddActivity extends BaseActivity<ActivityAddBinding> {
+    private String TAG = "AddActivity";
     private boolean income;//是否是收入
-    private String time; //创建时间
+    private String time = ""; //创建时间
     private String sortName; //分类名称
     private Integer sortImg; //分类图标
     private Double cost = 0.0; //金额
     private String remark;//备注
     private boolean isZero = true;
+    private boolean isDot = false;
+    private SQLiteDatabase DB;
 
     @Override
     protected void onCreated(Bundle savedInstanceState) {
@@ -79,7 +88,7 @@ public class AddActivity extends BaseActivity<ActivityAddBinding> {
                     subMoney();
                     break;
                 case R.id.tb_calc_num_done: //确定
-                    getMoney();
+                    addMoneyToDB(getMoney());
                     break;
                 case R.id.tb_calc_num_0:
                     addMoney('0');
@@ -118,34 +127,76 @@ public class AddActivity extends BaseActivity<ActivityAddBinding> {
         }
     }
 
-    private void getMoney() {
-        Date date = new Date();
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
-        time = dateFormat.format(date);
+    private void addMoneyToDB(Bill bill) {
+        DB = DBUtil.getSqLiteDatabase();
+        int mincome;
+        if(income)mincome = 1;
+        else mincome = 0;
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("time", bill.getTime());
+        contentValues.put("cost", String.valueOf(bill.getCost()));
+        contentValues.put("sortName", bill.getSortName());
+        contentValues.put("sortImg", bill.getSortImg());
+        contentValues.put("income", mincome);
+
+        long insert = DB.insert("tb_bill", null, contentValues);
+        if(insert > 0){
+            Log.i(TAG, "数据插入成功！");
+            this.finish();
+        }
+    }
+
+    private Bill getMoney() {
         cost = Double.parseDouble(binding.layoutAddJsj.tbNoteMoney.getText().toString());
+
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH) + 1;
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        time = year + "-";
+        if(month >= 10)time += month;
+        else time += "0" + month;
+        time += "-";
+        if(day >= 10)time += day;
+        else time += "0" + day;
+
         Bill bill = new Bill(cost, time, sortName, sortImg, income);
+        return bill;
     }
 
     private void subMoney() {
+        if(isZero)return;
         String sumCost = binding.layoutAddJsj.tbNoteMoney.getText().toString();
+        if(sumCost.substring(sumCost.length() - 1, sumCost.length()).equals(".")){
+            isDot = false;
+        }
         if(sumCost.length() > 1)sumCost = sumCost.substring(0, sumCost.length() - 1);
         else if (sumCost.length() == 1){
-            sumCost = "0.0";
+            sumCost = "0";
             isZero = true;
         }
         binding.layoutAddJsj.tbNoteMoney.setText(sumCost);
     }
 
     private void clearMoney() {
-        binding.layoutAddJsj.tbNoteMoney.setText("0.0");
+        binding.layoutAddJsj.tbNoteMoney.setText("0");
+        isDot = false;
         isZero = true;
     }
 
     private void addMoney(char c) {
+        if(c == '.' && isDot)return;
+        else if(c == '.')isDot = true;
         StringBuffer sumCost = new StringBuffer(binding.layoutAddJsj.tbNoteMoney.getText().toString());
-        if(isZero){
+        if(isZero && c != '.'){
+            if(c == '0')return;
             sumCost.delete(0, sumCost.length());
             isZero = false;
+        }
+        if(isZero && c == '.'){
+            isZero = false;
+            isDot = true;
         }
         sumCost.append(c);
         binding.layoutAddJsj.tbNoteMoney.setText(sumCost);

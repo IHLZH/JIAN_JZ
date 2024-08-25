@@ -1,13 +1,16 @@
 package com.example.jian_jz.Fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.jian_jz.Base.BaseFragment;
@@ -19,14 +22,23 @@ import com.example.jian_jz.databinding.FragmentAddOutBinding;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class AddOutFragment extends BaseFragment<FragmentAddOutBinding> {
     private String TAG = "AddOutFragment";
     private FragmentAddOutBinding binding;
+    private Context context;
+    private List<TextView> textViewList;
+    private Integer textColor;
+    private Integer defaultColor;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
         binding = getBinding();
+        context = getContext();
+        initTextViewList();
         setListeners();
         return view;
     }
@@ -52,35 +64,68 @@ public class AddOutFragment extends BaseFragment<FragmentAddOutBinding> {
             switch(v.getId()){
                 case R.id.btn_add_bangong:
                     EventBus.getDefault().post(new BtnTypeEvent("办公",R.mipmap.sort_bangong));
+                    setTextColor(binding.textAddBangong.getId());
                     break;
                 case R.id.btn_add_canyin:
                     EventBus.getDefault().post(new BtnTypeEvent("餐饮",R.mipmap.sort_canyin));
+                    setTextColor(binding.textAddCanyin.getId());
                     break;
                 case R.id.btn_add_gouwu:
                     EventBus.getDefault().post(new BtnTypeEvent("购物",R.mipmap.sort_gouwu));
+                    setTextColor(binding.textAddGouwu.getId());
                     break;
                 case R.id.btn_add_jiaotong:
                     EventBus.getDefault().post(new BtnTypeEvent("交通",R.mipmap.sort_jiaotong));
+                    setTextColor(binding.textAddJiaotong.getId());
                     break;
                 case R.id.btn_add_juanzeng:
                     EventBus.getDefault().post(new BtnTypeEvent("捐赠",R.mipmap.sort_juanzeng));
+                    setTextColor(binding.textAddJuanzeng.getId());
                     break;
                 case R.id.btn_add_lingshi:
                     EventBus.getDefault().post(new BtnTypeEvent("零食",R.mipmap.sort_lingshi));
+                    setTextColor(binding.textAddLingshi.getId());
                     break;
                 case R.id.btn_add_shuma:
                     EventBus.getDefault().post(new BtnTypeEvent("数码",R.mipmap.sort_shuma));
+                    setTextColor(binding.textAddShuma.getId());
                     break;
                 case R.id.btn_add_yiliao:
                     EventBus.getDefault().post(new BtnTypeEvent("医疗",R.mipmap.sort_yiliao));
+                    setTextColor(binding.textAddYiliao.getId());
                     break;
                 case R.id.btn_add_yule:
                     EventBus.getDefault().post(new BtnTypeEvent("娱乐",R.mipmap.sort_yule));
+                    setTextColor(binding.textAddYule.getId());
                     break;
                 case R.id.btn_add_yundong:
                     EventBus.getDefault().post(new BtnTypeEvent("运动",R.mipmap.sort_yundong));
+                    setTextColor(binding.textAddYundong.getId());
                     break;
             }
+        }
+    }
+
+    private void initTextViewList() {
+        textColor = ContextCompat.getColor(context, R.color.app_color);
+        defaultColor = ContextCompat.getColor(context, R.color.defalut);
+        textViewList = new ArrayList<>();
+        textViewList.add(binding.textAddBangong);
+        textViewList.add(binding.textAddCanyin);
+        textViewList.add(binding.textAddGouwu);
+        textViewList.add(binding.textAddJiaotong);
+        textViewList.add(binding.textAddJuanzeng);
+        textViewList.add(binding.textAddLingshi);
+        textViewList.add(binding.textAddShuma);
+        textViewList.add(binding.textAddYiliao);
+        textViewList.add(binding.textAddYule);
+        textViewList.add(binding.textAddYundong);
+    }
+
+    private void setTextColor(int id) {
+        for (TextView textView : textViewList) {
+            if(textView.getId() == id)textView.setTextColor(textColor);
+            else textView.setTextColor(defaultColor);
         }
     }
 

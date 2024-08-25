@@ -10,6 +10,16 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!-- 启动页 -->
+    <style name="LaunchVideoTheme" parent="AppTheme">
+        <item name="android:windowDisablePreview">true</item>
+    </style>
+    <!-- 主页 -->
+    <style name="MainSplashTheme" parent="AppTheme">
+        <item name="android:windowDisablePreview">true</item>
+    </style>
+
+
     <style name="dialog" parent="Theme.AppCompat.Light.Dialog">
         <item name="android:windowBackground">@color/transparent</item>
         <item name="android:windowContentOverlay">@null</item>
@@ -23,6 +33,8 @@
         <item name="android:backgroundDimEnabled">true</item>
         <!-- 模糊 -->
     </style>
+
+    <style name="null_theme">@null</style>
 
     <style name="main_tab_bottom">
         <item name="android:textSize">10sp</item>
