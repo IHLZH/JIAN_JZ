@@ -1,4 +1,4 @@
-package com.example.jian_jz.Fragment;
+package com.example.jian_jz.ui.Fragment;
 
 import android.bluetooth.le.ScanSettings;
 import android.content.Context;
@@ -20,10 +20,12 @@ import com.example.jian_jz.Base.BaseFragment;
 import com.example.jian_jz.Event.BtnTypeEvent;
 import com.example.jian_jz.Event.IncomeEvent;
 import com.example.jian_jz.Event.MessageEvent;
+import com.example.jian_jz.Event.ModifyEvent;
 import com.example.jian_jz.R;
 import com.example.jian_jz.databinding.FragmentAddInBinding;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +46,7 @@ public class AddInFragment extends BaseFragment<FragmentAddInBinding> {
         context = getContext();
         initTextViewList();
         setListeners();
+        EventBus.getDefault().register(this);
         return view;
     }
 
@@ -107,6 +110,37 @@ public class AddInFragment extends BaseFragment<FragmentAddInBinding> {
             else textView.setTextColor(defaultColor);
         }
     }
+    @Subscribe(sticky = true)
+    public void onModifyEvent(ModifyEvent modifyEvent){
+        if(modifyEvent.getIncomeEvent()){
+            setOnClick(modifyEvent.getMessageEvent());
+            EventBus.getDefault().removeStickyEvent(modifyEvent);
+        }
+    }
+
+    private void setOnClick(String messageEvent) {
+        switch(messageEvent){
+            case "工资":
+                setTextColor(binding.textAddGongzi.getId());
+                break;
+            case "兼职":
+                setTextColor(binding.textAddJianzhi.getId());
+                break;
+            case "礼金":
+                setTextColor(binding.textAddLijin.getId());
+                break;
+            case "零钱":
+                setTextColor(binding.textAddLingqian.getId());
+                break;
+            case "礼物":
+                setTextColor(binding.textAddLiwu.getId());
+                break;
+            case "其他":
+                setTextColor(binding.textAddQita.getId());
+                break;
+        }
+    }
+
 
     @Override
     public void onPause() {
@@ -123,6 +157,7 @@ public class AddInFragment extends BaseFragment<FragmentAddInBinding> {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        EventBus.getDefault().unregister(this);
         Log.i(TAG, "onDestroyView: ");
     }
 }

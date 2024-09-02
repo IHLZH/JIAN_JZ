@@ -1,25 +1,24 @@
-package com.example.jian_jz.Activity;
+package com.example.jian_jz.ui.Activity;
 
-import androidx.annotation.ContentView;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.text.Layout;
 import android.util.Log;
 import android.view.View;
 
-import com.example.jian_jz.Adapter.AddFragmentAdapter;
+import com.example.jian_jz.ui.Adapter.AddFragmentAdapter;
 import com.example.jian_jz.Base.BaseActivity;
 import com.example.jian_jz.Entity.Bill;
 import com.example.jian_jz.Event.BtnTypeEvent;
 import com.example.jian_jz.Event.IncomeEvent;
 import com.example.jian_jz.Event.MessageEvent;
-import com.example.jian_jz.Fragment.AddInFragment;
-import com.example.jian_jz.Fragment.AddOutFragment;
+import com.example.jian_jz.Event.ModifyEvent;
+import com.example.jian_jz.ui.Fragment.AddInFragment;
+import com.example.jian_jz.ui.Fragment.AddOutFragment;
 import com.example.jian_jz.R;
 import com.example.jian_jz.Utils.DB.DBUtil;
 import com.example.jian_jz.databinding.ActivityAddBinding;
@@ -31,15 +30,14 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class AddActivity extends BaseActivity<ActivityAddBinding> {
     private String TAG = "AddActivity";
+    private Integer id;
     private boolean income;//是否是收入
     private String time = ""; //创建时间
     private String sortName; //分类名称
@@ -48,6 +46,7 @@ public class AddActivity extends BaseActivity<ActivityAddBinding> {
     private String remark;//备注
     private boolean isZero = true;
     private boolean isDot = false;
+    private boolean isModify = false;
     private SQLiteDatabase DB;
 
     @Override
@@ -56,6 +55,27 @@ public class AddActivity extends BaseActivity<ActivityAddBinding> {
         initFragment();
         initTabLayout();
         setListeners();
+        getBillModifyIntent();
+    }
+
+    private void getBillModifyIntent() {
+        Intent intent = getIntent();
+        Bill bill = (Bill)intent.getSerializableExtra("bill");
+        id = intent.getIntExtra("id", -1);
+        if(bill != null){
+            time = bill.getTime();
+            isModify = true;
+            if(bill.getCost() > 0)isZero = false;
+        }
+        if(bill.isIncome()){
+                binding.vpAdd.setCurrentItem(1);
+        }else binding.vpAdd.setCurrentItem(0);
+        //设置类型和金额
+        binding.layoutAddJsj.itemTbTypeTv.setText(bill.getSortName());
+        binding.layoutAddJsj.tbNoteMoney.setText(String.format(Locale.CHINA,"%.2f", bill.getCost()));
+        //发布粘性事件
+        EventBus.getDefault().postSticky(new ModifyEvent(new IncomeEvent(bill.isIncome()), new MessageEvent(bill.getSortName())));
+        binding.layoutAddJsj.addJsj.setVisibility(View.VISIBLE);
     }
 
     private void setListeners() {
@@ -88,7 +108,10 @@ public class AddActivity extends BaseActivity<ActivityAddBinding> {
                     subMoney();
                     break;
                 case R.id.tb_calc_num_done: //确定
-                    addMoneyToDB(getMoney());
+                    if(isModify){
+                        ModifyMoneyFormDB(getMoney());
+                    }
+                    else addMoneyToDB(getMoney());
                     break;
                 case R.id.tb_calc_num_0:
                     addMoney('0');
@@ -127,6 +150,29 @@ public class AddActivity extends BaseActivity<ActivityAddBinding> {
         }
     }
 
+    private void ModifyMoneyFormDB(Bill bill) {
+        DB = DBUtil.getSqLiteDatabase();
+
+        int mincome;
+        if(income)mincome = 1;
+        else mincome = 0;
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("time", bill.getTime());
+        contentValues.put("cost", String.valueOf(bill.getCost()));
+        contentValues.put("sortName", bill.getSortName());
+        contentValues.put("sortImg", bill.getSortImg());
+        contentValues.put("income", mincome);
+
+        String whereClause = "id = ?";
+        String[] whereArgs = {String.valueOf(id)};
+
+        int row = DB.update("tb_bill", contentValues, whereClause, whereArgs);
+        if(row > 0){
+            Log.i(TAG, "ModifyMoneyFormDB: 更新成功！");
+        }
+    }
+
     private void addMoneyToDB(Bill bill) {
         DB = DBUtil.getSqLiteDatabase();
         int mincome;
@@ -149,20 +195,24 @@ public class AddActivity extends BaseActivity<ActivityAddBinding> {
 
     private Bill getMoney() {
         cost = Double.parseDouble(binding.layoutAddJsj.tbNoteMoney.getText().toString());
-
-        Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH) + 1;
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-        time = year + "-";
-        if(month >= 10)time += month;
-        else time += "0" + month;
-        time += "-";
-        if(day >= 10)time += day;
-        else time += "0" + day;
-
+        getTime();
         Bill bill = new Bill(cost, time, sortName, sortImg, income);
         return bill;
+    }
+
+    private void getTime() {
+        if(time == null){
+            Calendar calendar = Calendar.getInstance();
+            int year = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH) + 1;
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
+            time = year + "-";
+            if(month >= 10)time += month;
+            else time += "0" + month;
+            time += "-";
+            if(day >= 10)time += day;
+            else time += "0" + day;
+        }
     }
 
     private void subMoney() {

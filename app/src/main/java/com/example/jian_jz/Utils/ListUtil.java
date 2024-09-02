@@ -32,6 +32,8 @@ public class ListUtil {
         Cursor cursor = DB.query("tb_bill", null, selection, null, null, null, null);
 
         while(cursor.moveToNext()){
+            int idId = cursor.getColumnIndex("id");
+            int id = cursor.getInt(idId);
             int idCost = cursor.getColumnIndex("cost");
             Double cost = Double.parseDouble(cursor.getString(idCost));
             int idTime = cursor.getColumnIndex("time");
@@ -55,10 +57,11 @@ public class ListUtil {
                     mpIn.put(mtime, cost);
                 }else mpIn.put(mtime, mpIn.get(mtime) + cost);
             }
-            Bill bill = new Bill(cost, mtime, sortName, sortImg, income);
+            Bill bill = new Bill(id, cost, mtime, sortName, sortImg, income);
             billList.add(bill);
         }
 
+        cursor.close();
         return billList;
     }
 

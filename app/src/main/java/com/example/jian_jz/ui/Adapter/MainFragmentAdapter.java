@@ -1,4 +1,4 @@
-package com.example.jian_jz.Adapter;
+package com.example.jian_jz.ui.Adapter;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -7,10 +7,9 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import java.util.List;
 
-public class AddFragmentAdapter extends FragmentStateAdapter {
+public class MainFragmentAdapter extends FragmentStateAdapter {
     private List<Fragment> fragmentList;
-
-    public AddFragmentAdapter(List<Fragment> fragmentList, @NonNull FragmentActivity fragmentActivity) {
+    public MainFragmentAdapter(List<Fragment> fragmentList, @NonNull FragmentActivity fragmentActivity) {
         super(fragmentActivity);
         this.fragmentList = fragmentList;
     }

@@ -1,4 +1,4 @@
-package com.example.jian_jz.Fragment;
+package com.example.jian_jz.ui.Fragment;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -17,10 +17,12 @@ import com.example.jian_jz.Base.BaseFragment;
 import com.example.jian_jz.Event.BtnTypeEvent;
 import com.example.jian_jz.Event.IncomeEvent;
 import com.example.jian_jz.Event.MessageEvent;
+import com.example.jian_jz.Event.ModifyEvent;
 import com.example.jian_jz.R;
 import com.example.jian_jz.databinding.FragmentAddOutBinding;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +40,7 @@ public class AddOutFragment extends BaseFragment<FragmentAddOutBinding> {
         View view = super.onCreateView(inflater, container, savedInstanceState);
         binding = getBinding();
         context = getContext();
+        EventBus.getDefault().register(this);
         initTextViewList();
         setListeners();
         return view;
@@ -128,6 +131,48 @@ public class AddOutFragment extends BaseFragment<FragmentAddOutBinding> {
             else textView.setTextColor(defaultColor);
         }
     }
+    @Subscribe(sticky = true)
+    public void onMosifyEvent(ModifyEvent modifyEvent){
+        if(!modifyEvent.getIncomeEvent()){
+            setOnClick(modifyEvent.getMessageEvent());
+            EventBus.getDefault().removeStickyEvent(modifyEvent);
+        }
+    }
+
+    private void setOnClick(String messageEvent) {
+        switch(messageEvent){
+            case "办公":
+                setTextColor(binding.textAddBangong.getId());
+                break;
+            case "餐饮":
+                setTextColor(binding.textAddCanyin.getId());
+                break;
+            case "购物":
+                setTextColor(binding.textAddGouwu.getId());
+                break;
+            case "交通":
+                setTextColor(binding.textAddJiaotong.getId());
+                break;
+            case "捐赠":
+                setTextColor(binding.textAddJuanzeng.getId());
+                break;
+            case "零食":
+                setTextColor(binding.textAddLingshi.getId());
+                break;
+            case "数码":
+                setTextColor(binding.textAddShuma.getId());
+                break;
+            case "医疗":
+                setTextColor(binding.textAddYiliao.getId());
+                break;
+            case "娱乐":
+                setTextColor(binding.textAddYule.getId());
+                break;
+            case "运动":
+                setTextColor(binding.textAddYundong.getId());
+                break;
+        }
+    }
 
     @Override
     public void onPause() {
@@ -144,6 +189,7 @@ public class AddOutFragment extends BaseFragment<FragmentAddOutBinding> {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        EventBus.getDefault().unregister(this);
         Log.i(TAG, "onDestroyView: ");
     }
 

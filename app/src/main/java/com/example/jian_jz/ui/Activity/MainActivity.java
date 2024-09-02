@@ -1,16 +1,16 @@
-package com.example.jian_jz.Activity;
+package com.example.jian_jz.ui.Activity;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.os.Bundle;
 
-import com.example.jian_jz.Adapter.MainFragmentAdapter;
+import com.example.jian_jz.ui.Adapter.MainFragmentAdapter;
 import com.example.jian_jz.Base.BaseActivity;
-import com.example.jian_jz.Fragment.ChartFragment;
-import com.example.jian_jz.Fragment.BillFragment;
-import com.example.jian_jz.Fragment.MineFragment;
-import com.example.jian_jz.Fragment.NoteFragment;
+import com.example.jian_jz.ui.Fragment.ChartFragment;
+import com.example.jian_jz.ui.Fragment.BillFragment;
+import com.example.jian_jz.ui.Fragment.MineFragment;
+import com.example.jian_jz.ui.Fragment.NoteFragment;
 import com.example.jian_jz.R;
 import com.example.jian_jz.databinding.ActivityMainBinding;
 import com.google.android.material.tabs.TabLayout;

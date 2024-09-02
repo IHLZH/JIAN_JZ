@@ -1,23 +1,21 @@
-package com.example.jian_jz.Fragment;
+package com.example.jian_jz.ui.Fragment;
 
-import android.app.AlertDialog;
-import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,25 +23,20 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bigkoo.pickerview.builder.TimePickerBuilder;
 import com.bigkoo.pickerview.listener.OnTimeSelectListener;
 import com.bigkoo.pickerview.view.TimePickerView;
-import com.example.jian_jz.Activity.AddActivity;
-import com.example.jian_jz.Adapter.BillRecyclerAdapter;
+import com.example.jian_jz.ui.Activity.AddActivity;
+import com.example.jian_jz.ui.Adapter.BillRecyclerAdapter;
+import com.example.jian_jz.Entity.BHitem;
 import com.example.jian_jz.Entity.Bill;
 import com.example.jian_jz.Entity.Header;
 import com.example.jian_jz.R;
+import com.example.jian_jz.Utils.DB.DBUtil;
 import com.example.jian_jz.Utils.ListUtil;
 
-import java.text.DateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-
-import kotlin.Unit;
-import kotlin.jvm.functions.Function1;
 
 public class BillFragment extends Fragment {
     private Context context;
@@ -63,6 +56,9 @@ public class BillFragment extends Fragment {
     private Calendar selectDate;
     private String YMTime;
     private Calendar calendar;
+    //数据库
+    private SQLiteDatabase DB;
+    private String TAG = "BillFragment";
 
 
     @Nullable
@@ -85,12 +81,75 @@ public class BillFragment extends Fragment {
         //设置Adapter和LayoutManager
         recyclerView.setAdapter(billRecyclerAdapter);
         recyclerView.setLayoutManager(linearLayoutManager);
+        registerForContextMenu(recyclerView);
         //设置收支和监听器
         setSumOfInAndOut(headerList);
         setTimeSelect(calendar);
         setTimeSelectClickListener();
         JumpToAdd();
         return view;
+    }
+
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        int positionKey = item.getIntent().getIntExtra("position_key", -1);
+        List<BHitem> bHitems = BillRecyclerAdapter.getBHitems();
+        BHitem bHitem = bHitems.get(positionKey);
+        switch(item.getItemId()){
+            case 0: //修改
+                if(positionKey == -1){
+                    Toast.makeText(context, "修改失败！", Toast.LENGTH_SHORT).show();
+                    break;
+                }
+                if(bHitem instanceof Bill){
+                    JumpToModify((Bill)bHitem);
+                }else{
+                }
+                break;
+            case 1: //删除
+                if(positionKey == -1){
+                    Toast.makeText(context, "删除失败！", Toast.LENGTH_SHORT).show();
+                    break;
+                }
+                if(bHitem instanceof Bill){
+                    deleteBillFromRecycleView((Bill)bHitem, positionKey, bHitems);
+                    Toast.makeText(context, "删除成功！", Toast.LENGTH_SHORT).show();
+                }else{
+                }
+                break;
+        }
+        return true;
+    }
+
+    private void JumpToModify(Bill bHitem) {
+        Intent intent = new Intent();
+        intent.putExtra("id", bHitem.getId());
+        intent.putExtra("bill", bHitem);
+        intent.setClass(context, AddActivity.class);
+        startActivity(intent);
+    }
+
+    private void deleteBillFromRecycleView(Bill bHitem, int positionKey, List<BHitem> bHitems) {
+        deleteBillFromDB((Bill)bHitem);
+        billRecyclerAdapter.notifyItemRemoved(positionKey);
+        modifyRecycleView();
+        bHitems.remove(bHitem);
+        BillRecyclerAdapter.setbHitems(bHitems);
+    }
+
+    private void deleteBillFromDB(Bill bill) {
+        DB = DBUtil.getSqLiteDatabase();
+
+        Integer id = bill.getId();
+        String whereClause = "id = ?";
+        String[] whereArgs = {String.valueOf(id)};
+
+        int row = DB.delete("tb_bill", whereClause, whereArgs);
+        if(row > 0){
+            Log.i(TAG, "deleteBillFromDB: 删除成功！");
+        }else {
+            Log.i(TAG, "deleteBillFromDB: 删除失败！");
+        }
     }
 
     private void setTimeSelectClickListener() {
@@ -110,11 +169,7 @@ public class BillFragment extends Fragment {
                 calendar.setTime(date);
                 setSelectDate(calendar);
                 setYMTime(getYMTime(calendar));
-                setTimeSelect(calendar);
-                updateList(calendar);
-                setSumOfInAndOut(headerList);
-                billRecyclerAdapter = new BillRecyclerAdapter(getContext(), billList, headerList);
-                recyclerView.setAdapter(billRecyclerAdapter);
+                modifyRecycleView();
             }
         })
                 .setType(new boolean[]{true, true, false, false, false, false})
@@ -127,6 +182,14 @@ public class BillFragment extends Fragment {
                 .build();
 
         timePickerView.show();
+    }
+
+    private void modifyRecycleView() {
+        setTimeSelect(selectDate);
+        updateList(selectDate);
+        setSumOfInAndOut(headerList);
+        billRecyclerAdapter = new BillRecyclerAdapter(getContext(), billList, headerList);
+        recyclerView.setAdapter(billRecyclerAdapter);
     }
 
     private void updateList(Calendar calendar) {

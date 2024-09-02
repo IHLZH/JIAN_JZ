@@ -1,15 +1,10 @@
-package com.example.jian_jz.Activity;
-
-import androidx.appcompat.app.AppCompatActivity;
+package com.example.jian_jz.ui.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Window;
-import android.view.WindowManager;
 
 import com.example.jian_jz.Base.BaseActivity;
-import com.example.jian_jz.R;
 import com.example.jian_jz.Utils.DB.DBUtil;
 import com.example.jian_jz.Utils.DB.SqliteHelper;
 import com.example.jian_jz.databinding.ActivityInitBinding;

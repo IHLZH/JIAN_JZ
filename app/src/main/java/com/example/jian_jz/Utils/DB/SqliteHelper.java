@@ -15,7 +15,8 @@ public class SqliteHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         //账单表
         String billTable = "create table tb_bill(" +
-                "userId varchar(20) primary key," +
+                "id integer primary key autoincrement," +
+                "userId varchar(20)," +
                 "time varchar(20) not null," +
                 "cost varchar(20) not null," +
                 "sortName varchar(20) not null," +

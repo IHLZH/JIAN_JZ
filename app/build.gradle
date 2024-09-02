@@ -41,20 +41,19 @@ dependencies {
     implementation'com.google.code.gson:gson:2.10.1'
     //MultiType
     //implementation 'me.drakeet.multitype:multitype:3.3.0'
-    //Bmob后端云
-    //implementation'cn.bmob.android:http-legacy:1.0'
-    //implementation'cn.bmob.android:bmob-sdk:3.5.5'
     //SmartRefreshLayout下拉刷新框架
     implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-alpha-12'
     implementation 'com.scwang.smartrefresh:SmartRefreshHeader:1.1.0-alpha-12'
     //swipemenulistview
     implementation 'com.baoyz.swipemenulistview:library:1.3.0'
     //Recyclerview
-    implementation 'androidx.recyclerview:recyclerview:1.2.0'
+    implementation 'androidx.recyclerview:recyclerview:1.3.2'
     //EventBus
     implementation 'org.greenrobot:eventbus:3.1.1'
     //Android-PickerView时间选择器
     implementation 'com.contrarywind:Android-PickerView:4.1.7'
+    //微信
+    implementation 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'

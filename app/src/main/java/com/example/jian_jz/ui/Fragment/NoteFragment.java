@@ -1,4 +1,4 @@
-package com.example.jian_jz.Fragment;
+package com.example.jian_jz.ui.Fragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

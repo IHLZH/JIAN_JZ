@@ -2,7 +2,7 @@ package com.example.jian_jz.Entity;
 
 import java.io.Serializable;
 
-public class Header implements Serializable {
+public class Header extends BHitem implements Serializable {
     private double in;
     private double out;
     private String time;

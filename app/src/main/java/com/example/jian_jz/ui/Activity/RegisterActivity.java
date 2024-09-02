@@ -1,4 +1,4 @@
-package com.example.jian_jz.Activity;
+package com.example.jian_jz.ui.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 

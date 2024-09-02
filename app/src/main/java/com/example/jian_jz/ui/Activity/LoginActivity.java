@@ -1,13 +1,10 @@
-package com.example.jian_jz.Activity;
-
-import androidx.appcompat.app.AppCompatActivity;
+package com.example.jian_jz.ui.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
 import com.example.jian_jz.Base.BaseActivity;
-import com.example.jian_jz.R;
 import com.example.jian_jz.databinding.ActivityLoginBinding;
 
 public class LoginActivity extends BaseActivity<ActivityLoginBinding> {

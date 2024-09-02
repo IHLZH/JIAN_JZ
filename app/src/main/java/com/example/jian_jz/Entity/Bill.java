@@ -2,7 +2,7 @@ package com.example.jian_jz.Entity;
 
 import java.io.Serializable;
 
-public class Bill implements Serializable {
+public class Bill extends BHitem implements Serializable {
     private Integer id;
     private Integer userId;
     private Double cost; //金额
@@ -24,6 +24,15 @@ public class Bill implements Serializable {
     }
 
     public Bill(Double cost, String time, String sortName, Integer sortImg, boolean income) {
+        this.cost = cost;
+        this.time = time;
+        this.sortName = sortName;
+        this.sortImg = sortImg;
+        this.income = income;
+    }
+
+    public Bill(int id, Double cost, String time, String sortName, Integer sortImg, boolean income) {
+        this.id = id;
         this.cost = cost;
         this.time = time;
         this.sortName = sortName;
